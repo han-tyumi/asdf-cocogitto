@@ -62,15 +62,21 @@ get_target() {
 			;;
 		x86_64)
 			if [ "$normalized_os" = "unknown-linux" ]; then
-					target="x86_64-$normalized_os-musl"
+				target="x86_64-$normalized_os-musl"
 			else
-					target="x86_64-$normalized_os"
+				target="x86_64-$normalized_os"
 			fi
 			;;
-		*)
-			fail "Your architecture, $arch, is not supported by $TOOL_NAME."
+		arm64)
+			if [ "$normalized_os" = "apple-darwin" ]; then
+				target="x86_64-$normalized_os"
+			fi
 			;;
 	esac
+
+	if [ -z "$target" ]; then
+		fail "Your architecture, $arch, is not supported by $TOOL_NAME."
+	fi
 
 	echo "$target"
 }
