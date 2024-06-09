@@ -38,36 +38,36 @@ get_target() {
 	arch="$(uname -m)"
 
 	case "$os" in
-		Linux)
-			normalized_os="unknown-linux"
-			;;
-		Darwin)
-			normalized_os="apple-darwin"
-			;;
-		*)
-			fail "Your OS, $os, is not supported by $TOOL_NAME."
-			;;
+	Linux)
+		normalized_os="unknown-linux"
+		;;
+	Darwin)
+		normalized_os="apple-darwin"
+		;;
+	*)
+		fail "Your OS, $os, is not supported by $TOOL_NAME."
+		;;
 	esac
 
 	case "$arch" in
-		aarch64)
-			target="aarch64-$normalized_os-gnu"
-			;;
-		armv7l)
-			target="armv7-$normalized_os-musleabihf"
-			;;
-		x86_64)
-			if [ "$normalized_os" = "unknown-linux" ]; then
-				target="x86_64-$normalized_os-musl"
-			else
-				target="x86_64-$normalized_os"
-			fi
-			;;
-		arm64)
-			if [ "$normalized_os" = "apple-darwin" ]; then
-				target="x86_64-$normalized_os"
-			fi
-			;;
+	aarch64)
+		target="aarch64-$normalized_os-gnu"
+		;;
+	armv7l)
+		target="armv7-$normalized_os-musleabihf"
+		;;
+	x86_64)
+		if [ "$normalized_os" = "unknown-linux" ]; then
+			target="x86_64-$normalized_os-musl"
+		else
+			target="x86_64-$normalized_os"
+		fi
+		;;
+	arm64)
+		if [ "$normalized_os" = "apple-darwin" ]; then
+			target="x86_64-$normalized_os"
+		fi
+		;;
 	esac
 
 	if [ -z "$target" ]; then
