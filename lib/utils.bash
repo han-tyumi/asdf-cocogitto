@@ -5,7 +5,7 @@ set -euo pipefail
 # GitHub homepage where releases can be downloaded for cocogitto.
 GH_REPO="https://github.com/cocogitto/cocogitto"
 TOOL_NAME="cocogitto"
-TOOL_TEST="cocogitto --version"
+TOOL_TEST="cog --version"
 
 fail() {
 	echo -e "asdf-$TOOL_NAME: $*"
