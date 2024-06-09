@@ -36,13 +36,53 @@ list_all_versions() {
 	list_github_tags
 }
 
+get_target() {
+	local os arch normalized_os target
+	os="$(uname -s)"
+	arch="$(uname -m)"
+
+	case "$os" in
+		Linux)
+			normalized_os="unknown-linux"
+			;;
+		Darwin)
+			normalized_os="apple-darwin"
+			;;
+		*)
+			fail "Your OS, $os, is not supported by $TOOL_NAME."
+			;;
+	esac
+
+	case "$arch" in
+		aarch64)
+			target="aarch64-$normalized_os-gnu"
+			;;
+		armv7l)
+			target="armv7-$normalized_os-musleabihf"
+			;;
+		x86_64)
+			if [ "$normalized_os" = "unknown-linux" ]; then
+					target="x86_64-$normalized_os-musl"
+			else
+					target="x86_64-$normalized_os"
+			fi
+			;;
+		*)
+			fail "Your architecture, $arch, is not supported by $TOOL_NAME."
+			;;
+	esac
+
+	echo "$target"
+}
+
 download_release() {
-	local version filename url
+	local version filename target url
 	version="$1"
 	filename="$2"
+	target="$(get_target)"
 
 	# TODO: Adapt the release URL convention for cocogitto
-	url="$GH_REPO/archive/refs/tags/${version}.tar.gz"
+	url="$GH_REPO/releases/download/$version/$TOOL_NAME-$version-$target.tar.gz"
 
 	echo "* Downloading $TOOL_NAME release $version..."
 	curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
@@ -54,7 +94,7 @@ install_version() {
 	local install_path="${3%/bin}/bin"
 
 	if [ "$install_type" != "version" ]; then
-		fail "asdf-$TOOL_NAME supports release installs only"
+		fail "asdf-$TOOL_NAME supports release installs only."
 	fi
 
 	(
