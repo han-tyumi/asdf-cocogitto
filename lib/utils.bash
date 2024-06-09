@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-# TODO: Ensure this is the correct GitHub homepage where releases can be downloaded for cocogitto.
+# GitHub homepage where releases can be downloaded for cocogitto.
 GH_REPO="https://github.com/cocogitto/cocogitto"
 TOOL_NAME="cocogitto"
 TOOL_TEST="cocogitto --version"
@@ -42,7 +42,7 @@ download_release() {
 	filename="$2"
 
 	# TODO: Adapt the release URL convention for cocogitto
-	url="$GH_REPO/archive/v${version}.tar.gz"
+	url="$GH_REPO/archive/refs/tags/${version}.tar.gz"
 
 	echo "* Downloading $TOOL_NAME release $version..."
 	curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
